@@ -1,5 +1,5 @@
 <?php
-session_start(); //啟用session 變數功能
+// session_start(); //啟用session 變數功能
 require("dbconnect.php"); //匯入連結資料庫之共用程式碼
 
 function checkUP($userName,$passWord) {
@@ -22,6 +22,19 @@ function checkUP($userName,$passWord) {
 		return 0;
 	}
 }
+function isAdmin($uID){
+	global $conn;
+	$uid=(int)$uID;
+	$sql = "SELECT role FROM user WHERE id=$uID"; //產生SQL指令
+	if ($result = mysqli_query($conn,$sql)) { //執行SQL查詢
+		if ($row=mysqli_fetch_assoc($result)) {
+			if ($row['role'] == 999) 
+				return true;
+		}
+	}
+	return false;
+}
+
 
 
 ?>
