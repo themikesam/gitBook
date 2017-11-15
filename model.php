@@ -91,31 +91,37 @@ function addComments($id) { //ssss
 	$sql = "update book set push = push - 1 where id=$id";
 	return mysqli_query($conn, $sql); //執行SQL
 }
-function getComments($id) { //ssss
+function getComment($bkID) { //ssss
+	global $conn;
+  //產生SQL
+	$sql = "select comment.*, user.name as userName from comment,user where comment.uID = user.id and comment.bkID = $bkID";
+	return mysqli_query($conn, $sql); //執行SQL
+}
+function insertComment($bkID,$msg, $uID) {
+	global $conn;
+  if ($msg > ' ')
+  {
+    //基本安全處理
+    $bkID = (int)$bkID;
+		$msg=mysqli_real_escape_string($conn, $msg);
+		$uID=(int)$uID;
+		
+    //Generate SQL
+		$sql = "insert into comment (bkID, msg, uID) values ($bkID, '$msg', $uID);";
+		return mysqli_query($conn, $sql); //執行SQL
+  } 
+  else 
+    return false;
+}
+
+function deleteComment($id) {
 	global $conn;
 
 	//對$id 做基本檢誤
 	$id = (int) $id;
 	
 	//產生SQL
-	$sql = "update book set push = push - 1 where id=$id";
+	$sql = "delete from comment where id=$id;";
 	return mysqli_query($conn, $sql); //執行SQL
-}
-function insertComment($bkID,$msg, $uID) {
-	global $conn;
-
-  if ($msg > ' ') 
-  {
-    //基本安全處理
-    $bkID = (int) $bkID;
-		$msg=mysqli_real_escape_string($conn, $msg);
-		$uID=(int)$uID;
-		
-		//Generate SQL
-		$sql = "insert into comment (bkID, msg, uID) values ($bkID, '$msg', $uID);";
-		return mysqli_query($conn, $sql); //執行SQL
-  } 
-  else 
-    return false;
 }
 ?>
