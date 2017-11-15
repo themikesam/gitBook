@@ -1,6 +1,8 @@
 <?php
 session_start();
 require_once('model.php');
+require_once('loginModel.php');
+// requice_once('loginModel.php');
 $action =$_REQUEST['act'];
 
 switch ($action) {
@@ -42,9 +44,15 @@ $id = (int) $_REQUEST['id'];
   }
   break;
 case 'insertComment':
-  $title=(int)$_REQUEST['bkID'];
+  $bkID=(int)$_REQUEST['bkID'];
   $msg=$_REQUEST['msg'];
   insertComment($bkID, $msg, $_SESSION['uID']);
+  break;
+case 'deleteComment':
+  $id = (int) $_REQUEST['id'];
+  if ($id > 0 and isAdmin($_SESSION['uID'])) {
+    deleteComment($id);
+  }
   break;
 }
 ?>
