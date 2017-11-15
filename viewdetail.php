@@ -26,11 +26,13 @@ if ( ! isset($_SESSION['uID']) or $_SESSION['uID'] <= 0) {
     <td>message</td>
     <td>author</td>
     <td>recommend by</td>
-   <td>Likes</td>
+    <td>Likes</td>
   </tr>
 <?php
-require_once("model.php");
-$bkID=$_REQUEST['id'];
+// require_once("model.php");
+require("model.php");
+require("loginModel.php");
+$bkID=(int)$_REQUEST['id'];
 $results=getMsg($bkID); /*get bookdetail*/
 
 /* 因為只是一本，所以不需要while loop*/
@@ -45,20 +47,22 @@ if (	$rs=mysqli_fetch_array($results)) {
 	"</td><td>" , $rs['msg'],
 	"<td>", $rs['author'],
 	"<td>", $rs['name'],
-	"<td>(", $rs['push'], ")</td></td></tr>";
+	"<td>(", $rs['push'], ")</td></td></tr></table>";
 }
 
 echo"<hr/>";
 
 $results=getComment($bkID); /*get bookdetail*/
-
 /* 因為只是一本，所以不需要while loop*/
 while (	$rs=mysqli_fetch_array($results)) {
-	echo $rs['msg'],$rs['userName'],"<br/>";
+  if (isAdmin($_SESSION['uID'])) {
+		echo "<a href ='control.php?act=deleteComment&id=",$rs['id'],"'>delete</a>";
+	}
+	echo $rs['msg'],$rs['userName'], "<br>";
+	
 }
-
 ?>
-  <hr>
+  <hr/>
   <form method="post" action="control.php">
     <label>
       <input type="submit" name="Submit" value="新增" />
@@ -69,7 +73,5 @@ while (	$rs=mysqli_fetch_array($results)) {
       <input name="msg" type="text" id="msg" />
     </label>
 	</form>
-  </tr>
-</table>
 </body>
 </html>
